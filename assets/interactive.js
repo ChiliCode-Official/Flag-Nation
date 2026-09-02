@@ -27,6 +27,31 @@
       let autoplayTimer = null;
 
       // Extract story data from nav buttons
+      
+            // Custom stories data with user content
+      const defaultStories = [
+        {
+          title: "El flag está cambiando frente a nosotros",
+          badge: "ORANGE BOWL 2026",
+          desc: "Más ciudades. Más generaciones. Más competencia. Más historias. El Orange Bowl fue otro escenario para comprobarlo."
+        },
+        {
+          title: "Orange Bowl 2026 — Team Portraits. Rebels",
+          badge: "REBELS FLAG FOOTBALL",
+          desc: "Retratos de equipo y la intensidad de la categoría femenil y varonil en el emparrillado."
+        },
+        {
+          title: "Cada jugada, cada carrera, cada segundo dentro del campo suma.",
+          badge: "EN CADA JUGADA",
+          desc: "Velocidad, concentración y entrega absoluta en cada yarda recorrida."
+        },
+        {
+          title: "Where we’re headed in our debut season",
+          badge: "TEMPORADA 2026",
+          desc: "El camino y objetivos de los nuevos equipos en la liga."
+        }
+      ];
+
       const stories = navButtons.map(btn => {
         const divs = btn.querySelectorAll('div:last-child div');
         const badgeEl = divs[1];
@@ -64,11 +89,13 @@
 
         // Update Article Text
         if (stories[currentIndex]) {
-          if (articleTitle && stories[currentIndex].title) {
-            articleTitle.textContent = stories[currentIndex].title;
-          }
-          if (articleBadge && stories[currentIndex].badge) {
-            articleBadge.textContent = stories[currentIndex].badge;
+          if (defaultStories[currentIndex]) {
+            if (articleTitle) articleTitle.textContent = defaultStories[currentIndex].title;
+            if (articleBadge) articleBadge.textContent = defaultStories[currentIndex].badge;
+            if (articleSubtitle) articleSubtitle.textContent = defaultStories[currentIndex].desc;
+          } else {
+            if (articleTitle && stories[currentIndex].title) articleTitle.textContent = stories[currentIndex].title;
+            if (articleBadge && stories[currentIndex].badge) articleBadge.textContent = stories[currentIndex].badge;
           }
         }
       }
@@ -201,6 +228,46 @@
     });
   }
 
+  
+  // --- 5. SPONSORS CONTINUOUS ROTATOR / TICKER ---
+  function initSponsorsTicker() {
+    const sponsorsUls = document.querySelectorAll('ul.sponsors-ticker-ul');
+    sponsorsUls.forEach(ul => {
+      ul.style.opacity = '1';
+      ul.style.display = 'flex';
+      ul.style.willChange = 'transform';
+
+      const parent = ul.parentElement;
+      if (parent) {
+        parent.style.overflow = 'hidden';
+        parent.style.opacity = '1';
+      }
+
+      // Clone elements twice to guarantee seamless infinite scrolling
+      const items = Array.from(ul.children);
+      for (let c = 0; c < 2; c++) {
+        items.forEach(item => {
+          ul.appendChild(item.cloneNode(true));
+        });
+      }
+
+      let pos = 0;
+      const speed = 0.85; // pixels per frame
+
+      function animate() {
+        pos -= speed;
+        const oneSetWidth = ul.scrollWidth / 3;
+        if (oneSetWidth > 0 && Math.abs(pos) >= oneSetWidth) {
+          pos = 0;
+        }
+        ul.style.transform = 'translateX(' + pos + 'px)';
+        requestAnimationFrame(animate);
+      }
+
+      requestAnimationFrame(animate);
+    });
+  }
+
   // Trigger setup
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', () => {
@@ -208,6 +275,8 @@
       initTickers();
       initMobileMenu();
       initCart();
+    initSponsorsTicker();
+      initSponsorsTicker();
     });
   } else {
     initCarousels();
