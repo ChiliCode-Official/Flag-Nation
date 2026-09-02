@@ -1,0 +1,81 @@
+/* Capa visual propia: separada del HTML exportado por Framer para que sea fácil de mantener. */
+:root {
+  --fn-orange: #ff6b00;
+  --fn-ink: #080808;
+  --fn-panel: #0d0d0d;
+  --fn-line: rgba(255, 255, 255, .12);
+  --fn-muted: rgba(255, 255, 255, .62);
+}
+
+html { background: var(--fn-ink); }
+
+body {
+  background-color: var(--fn-ink) !important;
+  background-image:
+    linear-gradient(90deg, transparent 0, transparent calc(12.5% - 1px), rgba(255,255,255,.08) calc(12.5% - 1px), rgba(255,255,255,.08) 12.5%, transparent 12.5%),
+    radial-gradient(rgba(255,255,255,.055) .7px, transparent .8px) !important;
+  background-size: 100% 100%, 4px 4px !important;
+  color: #fff;
+}
+
+/* Evita la fotografía monumental de fondo: las imágenes siguen disponibles en tarjetas y artículos. */
+main [data-framer-background-image-wrapper] img[src*="hero"],
+section [data-framer-background-image-wrapper] img[src*="hero"],
+section[aria-label="kraQen editorial carousel"] > div:first-child img[src*="hero"] {
+  opacity: 0 !important;
+}
+
+/* Convierte la cabecera en una barra compacta, como el diseño original. */
+.framer-3glsgo {
+  background: #000 !important;
+  padding: 12px max(16px, calc((100vw - 1200px) / 2)) !important;
+}
+
+.framer-BIi1o {
+  border: 1px solid rgba(255,255,255,.12);
+  box-shadow: 0 12px 30px rgba(0,0,0,.25);
+}
+
+/* Paneles y tarjetas: planos, densos y con una retícula discreta. */
+[data-framer-name="Footer"],
+[data-framer-name="Patrocinadores"] {
+  background-color: transparent !important;
+}
+
+[data-border="true"] {
+  border-color: var(--fn-line) !important;
+}
+
+button, [data-reset="button"] {
+  border-radius: 0 !important;
+}
+
+/* Patrocinadores: monocromáticos sobre negro, sin tocar los archivos fuente. */
+[data-framer-name="Patrocinadores"] img,
+img[src*="/sponsors/"] {
+  filter: grayscale(1) brightness(0) invert(1) !important;
+  opacity: .78;
+  transition: opacity .2s ease, transform .2s ease;
+}
+
+[data-framer-name="Patrocinadores"] img:hover,
+img[src*="/sponsors/"]:hover {
+  opacity: 1;
+  transform: scale(1.04);
+}
+
+/* Las áreas de contenido no compiten con el fondo. */
+section, footer { position: relative; }
+section::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border-top: 1px solid rgba(255,255,255,.045);
+  border-bottom: 1px solid rgba(255,255,255,.03);
+}
+
+@media (max-width: 809px) {
+  .framer-3glsgo { padding: 8px 12px !important; }
+  body { background-size: 100% 100%, 3px 3px !important; }
+}
