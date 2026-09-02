@@ -8,3 +8,6 @@
 Thumbs.db
 desktop.ini
 *.log
+
+# Configuración privada para desarrollo local de Firebase.
+/admin/firebase-config.local.js

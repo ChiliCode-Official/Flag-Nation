@@ -28,3 +28,25 @@ Sitio web oficial de **Flag Nation**, la liga de tocho bandera (flag football) e
    - Source: **Deploy from a branch**
    - Branch: **main** (o `master`) / **(root)**.
 4. Haz clic en **Save**. En un par de minutos tu sitio estará en línea en `https://<tu-usuario>.github.io/Flag-Nation/`.
+
+## Panel administrativo con Firebase
+
+El panel está en `admin/index.html`. Es privado por autenticación y reglas de Firestore; no se debe enlazar desde el menú público.
+
+### Configuración inicial
+
+1. Crea un proyecto en [Firebase Console](https://console.firebase.google.com/) y registra una aplicación web.
+2. En **Authentication > Sign-in method**, activa **Google** y agrega el dominio de GitHub Pages en los dominios autorizados.
+3. Crea una base de datos **Cloud Firestore**.
+4. Publica las reglas de [firestore.rules](firestore.rules). Desde Firebase Console puedes pegarlas manualmente; después, con Firebase CLI, usa `firebase deploy --only firestore:rules`.
+5. Copia el objeto de configuración de la app web en [admin/firebase-config.js](admin/firebase-config.js). La configuración web identifica el proyecto; no sustituye las reglas de seguridad.
+6. Inicia sesión una vez en `admin/` y copia el UID mostrado por Firebase Authentication. En Firestore crea el documento `admins/<UID>` con, por ejemplo, `{ "email": "tu-correo@dominio.com" }`. Este primer alta se hace desde la consola de Firebase; a partir de ahí las reglas permiten a un administrador gestionar accesos.
+7. Abre `admin/`, inicia sesión y usa **Cargar predefinidos** para registrar los equipos iniciales. Luego podrás crear partidos, actualizar horarios, estados y marcadores.
+
+### Modelo de datos
+
+- `teams/{teamId}`: nombre, abreviatura, escudo y estado activo.
+- `games/{gameId}`: fecha, equipos, marcador, estado, sede y visibilidad pública.
+- `admins/{uid}`: rol que habilita escritura administrativa.
+
+Nunca subas `admin/firebase-config.local.js`; ya está ignorado por Git.

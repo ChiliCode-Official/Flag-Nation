@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="es-MX">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#080808">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Flag Nation · Administración</title>
+  <link rel="stylesheet" href="admin.css">
+</head>
+<body>
+  <main class="app-shell">
+    <section id="auth-view" class="auth-view" aria-labelledby="auth-title">
+      <a class="brand" href="../index.html" aria-label="Volver a Flag Nation">FN<span>ADMIN</span></a>
+      <div class="auth-card">
+        <p class="eyebrow">OPERACIONES DE LIGA</p>
+        <h1 id="auth-title">Control de temporada</h1>
+        <p>Calendario, equipos, resultados y marcadores desde un panel diseñado para móvil.</p>
+        <button id="sign-in" class="button button-primary" type="button">Continuar con Google</button>
+        <p id="auth-message" class="message" role="status"></p>
+      </div>
+    </section>
+
+    <section id="dashboard-view" class="dashboard hidden" aria-label="Panel administrativo">
+      <header class="topbar">
+        <a class="brand" href="../index.html">FN<span>ADMIN</span></a>
+        <div class="account"><span id="admin-name"></span><button id="sign-out" class="text-button" type="button">Salir</button></div>
+      </header>
+
+      <nav class="tabs" aria-label="Secciones">
+        <button class="tab is-active" data-panel="games" type="button">Partidos</button>
+        <button class="tab" data-panel="teams" type="button">Equipos</button>
+      </nav>
+
+      <section id="games-panel" class="panel">
+        <div class="panel-heading"><div><p class="eyebrow">CALENDARIO</p><h2>Partidos</h2></div><button id="new-game" class="button button-primary" type="button">+ Partido</button></div>
+        <div id="game-form-wrap" class="editor hidden">
+          <form id="game-form">
+            <input id="game-id" type="hidden">
+            <div class="form-grid">
+              <label>Fecha y hora<input id="game-date" type="datetime-local" required></label>
+              <label>Temporada<input id="game-season" type="text" value="2026" maxlength="12" required></label>
+              <label>Local<select id="home-team" required></select></label>
+              <label>Visitante<select id="away-team" required></select></label>
+              <label>Estado<select id="game-status"><option value="scheduled">Programado</option><option value="live">En vivo</option><option value="final">Finalizado</option><option value="postponed">Pospuesto</option></select></label>
+              <label>Lugar<input id="game-venue" type="text" maxlength="100" placeholder="Sede / campo"></label>
+              <label>Marcador local<input id="home-score" type="number" min="0" max="999" inputmode="numeric"></label>
+              <label>Marcador visitante<input id="away-score" type="number" min="0" max="999" inputmode="numeric"></label>
+            </div>
+            <label class="toggle"><input id="game-published" type="checkbox" checked> Publicar en el sitio</label>
+            <div class="form-actions"><button class="button button-primary" type="submit">Guardar cambios</button><button id="cancel-game" class="button button-secondary" type="button">Cancelar</button></div>
+          </form>
+        </div>
+        <p id="games-message" class="message" role="status"></p>
+        <div id="games-list" class="cards" aria-live="polite"></div>
+      </section>
+
+      <section id="teams-panel" class="panel hidden">
+        <div class="panel-heading"><div><p class="eyebrow">CATÁLOGO</p><h2>Equipos</h2></div><button id="seed-teams" class="button button-secondary" type="button">Cargar predefinidos</button></div>
+        <p class="hint">La carga no reemplaza equipos existentes. Para cambiar un escudo, actualiza su URL.</p>
+        <div id="team-form-wrap" class="editor hidden">
+          <form id="team-form"><input id="team-id" type="hidden"><div class="form-grid"><label>Nombre<input id="team-name" maxlength="60" required></label><label>Abreviatura<input id="team-short-name" maxlength="6" required></label><label class="full">URL del escudo<input id="team-logo" type="url" maxlength="500" placeholder="https://..."></label></div><label class="toggle"><input id="team-active" type="checkbox" checked> Equipo activo</label><div class="form-actions"><button class="button button-primary" type="submit">Guardar equipo</button><button id="cancel-team" class="button button-secondary" type="button">Cancelar</button></div></form>
+        </div>
+        <button id="new-team" class="button button-primary" type="button">+ Equipo</button>
+        <p id="teams-message" class="message" role="status"></p>
+        <div id="teams-list" class="cards" aria-live="polite"></div>
+      </section>
+    </section>
+  </main>
+  <script type="module" src="app.js"></script>
+</body>
+</html>

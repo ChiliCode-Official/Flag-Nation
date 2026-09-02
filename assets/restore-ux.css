@@ -11,3 +11,31 @@ img[src*="/sponsors/"]:hover {
   opacity: 1;
   transform: scale(1.04);
 }
+
+/* El export original ya aporta variantes responsive; estas reglas evitan
+   desbordes al ejecutarlo sin el runtime de Framer. */
+@media (max-width: 809px) {
+  html,
+  body {
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+
+  [data-framer-name="Mobile Menu"] a,
+  [data-framer-name="Menu Icon"],
+  button,
+  [data-reset="button"] {
+    min-height: 44px;
+  }
+
+  ul:has(> li.ticker-item) {
+    will-change: transform;
+    touch-action: pan-y;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ul:has(> li.ticker-item) {
+    transform: none !important;
+  }
+}
