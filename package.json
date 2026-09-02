@@ -1,0 +1,24 @@
+{
+  "name": "flag-nation",
+  "version": "1.0.0",
+  "description": "Sitio web oficial de **Flag Nation**, la liga de tocho bandera (flag football) en Querétaro, México.",
+  "main": "find_alts.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ChiliCode-Official/Flag-Nation.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/ChiliCode-Official/Flag-Nation/issues"
+  },
+  "homepage": "https://github.com/ChiliCode-Official/Flag-Nation#readme",
+  "dependencies": {
+    "cheerio": "^1.2.0"
+  }
+}
