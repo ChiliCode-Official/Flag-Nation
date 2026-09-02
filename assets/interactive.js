@@ -8,6 +8,15 @@
   'use strict';
 
   // --- 1. EDITORIAL CAROUSEL RESTORATION ---
+  function normalizeLocalImageSources() {
+    document.querySelectorAll('img[src*="./assets/images/"]').forEach(img => {
+      const source = img.getAttribute('src');
+      if (!source || !source.includes('?')) return;
+      img.setAttribute('src', source.split('?')[0]);
+      img.removeAttribute('srcset');
+    });
+  }
+
   function initCarousels() {
     const carousels = document.querySelectorAll('section[aria-label*="editorial carousel"]');
     carousels.forEach(carousel => {
@@ -189,11 +198,18 @@
   function initMobileMenu() {
     const menuIcons = document.querySelectorAll('[data-framer-name="Menu Icon"]');
     menuIcons.forEach(icon => {
+      if (icon.dataset.menuInitialized === 'true') return;
+      icon.dataset.menuInitialized = 'true';
       const navContainer = icon.closest('.framer-BIi1o') || icon.closest('nav') || document.body;
       const mobileMenu = navContainer.querySelector('[data-framer-name="Mobile Menu"]');
 
       if (mobileMenu) {
         let isOpen = false;
+        if (!mobileMenu.id) mobileMenu.id = 'flag-mobile-menu';
+        icon.setAttribute('role', 'button');
+        icon.setAttribute('tabindex', '0');
+        icon.setAttribute('aria-expanded', 'false');
+        icon.setAttribute('aria-controls', mobileMenu.id);
         mobileMenu.style.transition = 'max-height 0.35s ease, opacity 0.3s ease';
         mobileMenu.style.maxHeight = '0px';
         mobileMenu.style.opacity = '0';
@@ -201,18 +217,26 @@
         mobileMenu.style.pointerEvents = 'none';
 
         icon.style.cursor = 'pointer';
-        icon.addEventListener('click', () => {
-          isOpen = !isOpen;
-          if (isOpen) {
-            mobileMenu.style.maxHeight = '600px';
-            mobileMenu.style.opacity = '1';
-            mobileMenu.style.pointerEvents = 'auto';
-          } else {
-            mobileMenu.style.maxHeight = '0px';
-            mobileMenu.style.opacity = '0';
-            mobileMenu.style.pointerEvents = 'none';
-          }
+        const setMenuState = (nextState) => {
+          isOpen = nextState;
+          icon.setAttribute('aria-expanded', String(isOpen));
+          mobileMenu.classList.toggle('is-open', isOpen);
+          mobileMenu.style.maxHeight = isOpen ? 'calc(100dvh - 88px)' : '0px';
+          mobileMenu.style.opacity = isOpen ? '1' : '0';
+          mobileMenu.style.pointerEvents = isOpen ? 'auto' : 'none';
+        };
+        const toggleMenu = (event) => { event.preventDefault(); setMenuState(!isOpen); };
+        icon.addEventListener('click', toggleMenu);
+        icon.addEventListener('keydown', (event) => {
+          if (event.key === 'Enter' || event.key === ' ') toggleMenu(event);
         });
+        mobileMenu.querySelectorAll('a').forEach(link => {
+          link.addEventListener('click', () => setMenuState(false));
+        });
+        document.addEventListener('keydown', (event) => {
+          if (event.key === 'Escape' && isOpen) setMenuState(false);
+        });
+        setMenuState(false);
       }
     });
   }
@@ -277,6 +301,7 @@
   // Trigger setup
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', () => {
+      normalizeLocalImageSources();
       initCarousels();
       initTickers();
       initMobileMenu();
@@ -284,6 +309,7 @@
       initSponsorsTicker();
     });
   } else {
+    normalizeLocalImageSources();
     initCarousels();
     initTickers();
     initMobileMenu();

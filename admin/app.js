@@ -1,4 +1,4 @@
-import { firebaseConfig, adminEmails } from "./firebase-config.js";
+import { firebaseConfig, adminEmails, imgurClientId } from "./firebase-config.js";
 import { predefinedTeams } from "./teams.js";
 
 const $ = (id) => document.getElementById(id);
@@ -86,9 +86,32 @@ function openTeam(id = "") {
   $("team-name").value = team?.name || "";
   $("team-short-name").value = team?.shortName || "";
   $("team-logo").value = team?.logoUrl || "";
+  $("team-logo-file").value = "";
   $("team-active").checked = team?.active ?? true;
   $("team-form-wrap").classList.remove("hidden");
   $("team-name").focus();
+}
+
+async function uploadImgurImage(event) {
+  const file = event.target.files?.[0];
+  if (!file) return;
+  if (!imgurClientId) return message("teams-message", "Configura imgurClientId en admin/firebase-config.js para activar la subida automática.", true);
+  if (!file.type.startsWith("image/") || file.size > 8 * 1024 * 1024) return message("teams-message", "Selecciona una imagen de máximo 8 MB.", true);
+  try {
+    const bitmap = await createImageBitmap(file);
+    const scale = Math.min(1, 1200 / Math.max(bitmap.width, bitmap.height));
+    const canvas = document.createElement("canvas");
+    canvas.width = Math.max(1, Math.round(bitmap.width * scale)); canvas.height = Math.max(1, Math.round(bitmap.height * scale));
+    canvas.getContext("2d").drawImage(bitmap, 0, 0, canvas.width, canvas.height);
+    const blob = await new Promise(resolve => canvas.toBlob(resolve, "image/webp", .84));
+    const body = new FormData(); body.append("image", blob, "flag-nation.webp");
+    message("teams-message", "Subiendo imagen…");
+    const response = await fetch("https://api.imgur.com/3/image", { method: "POST", headers: { Authorization: `Client-ID ${imgurClientId}` }, body });
+    const result = await response.json();
+    if (!response.ok || !result.success || !result.data?.link) throw new Error("Imgur no aceptó la imagen.");
+    $("team-logo").value = result.data.link;
+    message("teams-message", "Imagen subida. Guarda el equipo para aplicar el cambio.");
+  } catch (error) { message("teams-message", error.message || "No fue posible subir la imagen.", true); }
 }
 
 async function saveGame(event) {
@@ -154,5 +177,6 @@ async function start() {
 
 $("new-game").addEventListener("click", () => openGame()); $("cancel-game").addEventListener("click", () => $("game-form-wrap").classList.add("hidden")); $("game-form").addEventListener("submit", saveGame);
 $("new-team").addEventListener("click", () => openTeam()); $("cancel-team").addEventListener("click", () => $("team-form-wrap").classList.add("hidden")); $("team-form").addEventListener("submit", saveTeam); $("seed-teams").addEventListener("click", seedTeams);
+$("team-logo-file").addEventListener("change", uploadImgurImage);
 document.querySelectorAll(".tab").forEach(tab => tab.addEventListener("click", () => { document.querySelectorAll(".tab").forEach(item => item.classList.toggle("is-active", item === tab)); $("games-panel").classList.toggle("hidden", tab.dataset.panel !== "games"); $("teams-panel").classList.toggle("hidden", tab.dataset.panel !== "teams"); }));
 start().catch(error => showAuth(`No se pudo cargar Firebase: ${error.message}`));

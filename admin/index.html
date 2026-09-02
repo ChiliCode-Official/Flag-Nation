@@ -59,7 +59,7 @@
         <div class="panel-heading"><div><p class="eyebrow">CATÁLOGO</p><h2>Equipos</h2></div><button id="seed-teams" class="button button-secondary" type="button">Cargar predefinidos</button></div>
         <p class="hint">La carga no reemplaza equipos existentes. Para cambiar un escudo, actualiza su URL.</p>
         <div id="team-form-wrap" class="editor hidden">
-          <form id="team-form"><input id="team-id" type="hidden"><div class="form-grid"><label>Nombre<input id="team-name" maxlength="60" required></label><label>Abreviatura<input id="team-short-name" maxlength="6" required></label><label class="full">URL del escudo<input id="team-logo" type="url" maxlength="500" placeholder="https://..."></label></div><label class="toggle"><input id="team-active" type="checkbox" checked> Equipo activo</label><div class="form-actions"><button class="button button-primary" type="submit">Guardar equipo</button><button id="cancel-team" class="button button-secondary" type="button">Cancelar</button></div></form>
+          <form id="team-form"><input id="team-id" type="hidden"><div class="form-grid"><label>Nombre<input id="team-name" maxlength="60" required></label><label>Abreviatura<input id="team-short-name" maxlength="6" required></label><label class="full">URL del escudo<input id="team-logo" type="url" maxlength="500" placeholder="https://..."></label><label class="full">Subir escudo<input id="team-logo-file" type="file" accept="image/png,image/jpeg,image/webp"></label></div><label class="toggle"><input id="team-active" type="checkbox" checked> Equipo activo</label><div class="form-actions"><button class="button button-primary" type="submit">Guardar equipo</button><button id="cancel-team" class="button button-secondary" type="button">Cancelar</button></div></form>
         </div>
         <button id="new-team" class="button button-primary" type="button">+ Equipo</button>
         <p id="teams-message" class="message" role="status"></p>
@@ -67,6 +67,6 @@
       </section>
     </section>
   </main>
-  <script type="module" src="app.js"></script>
+<script type="module" src="app.js"></script>
 </body>
 </html>
