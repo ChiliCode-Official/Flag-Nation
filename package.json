@@ -20,5 +20,10 @@
   "homepage": "https://github.com/ChiliCode-Official/Flag-Nation#readme",
   "dependencies": {
     "cheerio": "^1.2.0"
+  },
+  "devDependencies": {
+    "@types/react": "^19.2.18",
+    "@types/react-dom": "^19.2.5",
+    "typescript": "^7.0.2"
   }
 }
